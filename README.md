@@ -1,6 +1,6 @@
 # Water Surface Identification Using UNet/ UNet-RAU in Drone Imagery #
 
-**This repo is originally folked from zhixuhao/unet**
+**This repo is originally forked from zhixuhao/unet**
 
 *Please go through zhixuhao/unet/README.md for implementation details of UNet*
 
@@ -10,37 +10,39 @@
 
 **Steps:**
 
-1. Clone the folder.
-2. Create a drive folder (Lets assume the its "unet-new").
-3. Upload all files to Google Drive except UNetPro.ipynb
+1. Clone this repository.
+2. Create a Google Drive folder (Lets assume the its `unet-new`).
+3. Upload all files to Google Drive folder `unet-new` except UNetPro.ipynb
 4. Upload UNetPro.ipynb to Google Colab Pro
-5. In Colab go to top menu and select `Runtime > Change runtime type > Hardware accelerator` to `GPU` and save it
-4. Go to top menu and select `Run all`
+5. In Colab go to top menu and select `Runtime > Change runtime type > Hardware accelerator` to `GPU` and save it.
+6. Go to top menu and select `Run all`.
+7. Provide accesss permission to your dive from Colab.
 
 **Adding Training & Testing Data**
 
-Here we test 04 datasets:
- - ONR
- - OFR
- - BOTH
- - DRONE
+Here we test 04 `datasets`:
+ - `ONR`
+ - `OFR`
+ - `BOTH`
+ - `DRONE`
 
-Each dataset has a `training` and a `testing` sub-datasets.
+Each dataset has two `sub-datasets`:
+ - `training` - for training
+ - `testing` - for testing
 
 In each sub-dataset it has `image` and `label` folders.
  - `images` - original images
  - `lable` - ground truth images
 
-Images were obtained from Puddle-1000 dataset available at `Cow911/SingleImageWaterHazardDetectionWithRAU`.
+Images were obtained from `Puddle-1000` dataset available at `Cow911/SingleImageWaterHazardDetectionWithRAU`.
 
 **Updating main.py**
 
-`base_path` - Path of the data folder.
-*Ex. base_path = "/content/gdrive/My Drive/unet-new"*
+`base_path` - Path of the data folder *Ex. base_path = "/content/gdrive/My Drive/unet-new"*
 
 `batch_size` - Bach size
 
-`trainCount` - Training image size. It is set to total number of training images by default.
+`trainCount` - Training image count. By default it is set to total number of training images.
 
 EPOCHS
 
@@ -48,7 +50,7 @@ EPOCHS
 
 *Ex. `ecpoch_array = [1000,20000]`*
 - Train for 1000 epochs and evaluate.
-- Then trian for 20000 epochs from begining and evaluate.
+- Then, trian for 20000 epochs from begining and evaluate.
 
 RESIZING
 
@@ -60,12 +62,12 @@ MODEL
 `model,model_name` - select the model and model name
 
 Currently following models have been implemented:
-- unet `unet without any modifications`
-- unet-1-rau
-- unet-2-rau
-- unet-3-rau
-- unet-4-rau
-- unet-8-rau
+- `unet` - unet without any modifications
+- `unet-1-rau`
+- `unet-2-rau`
+- `unet-3-rau`
+- `unet-4-rau`
+- `unet-8-rau`
 
 CallBack Class
 
@@ -77,7 +79,8 @@ Select datasets to evaluate
 Specify the datasets to evaluate. Ex. If you specify `if(0,1)` only 0th dataset will be evaluated. If you specify `if(0,4)` 0th,1st,2nd, and 3rd datasets will be evaluated. If you need to evaluate the 2nd dataset only specify `if(2,3)`.
 
 Define datasets to evaluate
-Specify the datasets indicated by each index. That is the original folder names in the 'data' folder which specify datasets.
+
+Specify the datasets indicated by each index. That is the original folder names in the `data` folder which specify datasets.
 
 - `data.py` - No need to change | contains data pre processing
 - `model.py` - No need to change | contains unet models
