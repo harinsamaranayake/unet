@@ -1,82 +1,67 @@
-# Implementation of deep learning framework -- Unet, using Keras
+This repo is originally folked from zhixuhao/unet
 
-The architecture was inspired by [U-Net: Convolutional Networks for Biomedical Image Segmentation](http://lmb.informatik.uni-freiburg.de/people/ronneber/u-net/).
+Please go through zhixuhao/unet/README.md for implementation details of UNet
 
----
+Setup - Colab Pro
 
-## Overview
+We executed this code on Google Colab Pro. Steps are as follows:
 
-### Data
+1. Upload all code files to Google Drive. Lets assume its "unet-new"
+2. Upload UNetPro.ipynb to Google Colab Pro
+3. Go to top menu and select Runtime > Change runtime type > Hardware accelerator to GPU and save it
+4. Go to top menu and select Run all
 
-The original dataset is from [isbi challenge](http://brainiac2.mit.edu/isbi_challenge/), and I've downloaded it and done the pre-processing.
+Adding training and testing data
 
-You can find it in folder data/membrane.
+Here we test 04 datasets ONR, OFR, BOTH, and DRONE.
+Each dataset has a training and a testing sub-datasets.
+In each sub-dataset it has image and label folders.
+images - original images
+lable - ground truth images
 
-### Data augmentation
+Images were obtained from Puddle-1000 dataset available at Cow911/SingleImageWaterHazardDetectionWithRAU
 
-The data for training contains 30 512*512 images, which are far not enough to feed a deep learning neural network. I use a module called ImageDataGenerator in keras.preprocessing.image to do data augmentation.
+updating main.py
 
-See dataPrepare.ipynb and data.py for detail.
+base_path - Path of the data folder.
+base_path = "/content/gdrive/My Drive/unet-new"
 
+batch_size - Bach size
 
-### Model
+trainCount - Training image size. It is set to total number of training images by default.
 
-![img/u-net-architecture.png](img/u-net-architecture.png)
+EPOCHS
+ecpoch_array - set of epoch to continue the training
+ecpoch_array = [1000,20000]
 
-This deep neural network is implemented with Keras functional API, which makes it extremely easy to experiment with different interesting architectures.
+- Train for 1000 epochs and evaluate.
+- Then trian for 20000 epochs from begining and evaluate.
 
-Output from the network is a 512*512 which represents mask that should be learned. Sigmoid activation function
-makes sure that mask pixels are in \[0, 1\] range.
+RESIZING
+target_size - input image size to unet
+target_size_channels - input image size with channels to unet
 
-### Training
+MODEL
+model,model_name - select the model
+currently it has the following models
 
-The model is trained for 5 epochs.
+- unet | unet without any modifications
+- unet-1-rau
+- unet-2-rau
+- unet-3-rau
+- unet-4-rau
+- unet-8-rau
 
-After 5 epochs, calculated accuracy is about 0.97.
+CallBack Class
+It is used to evaluate the results while training.
+Ex: If you specify 100, 200, 500 in the if statement and your original epochs count is 1000, it will evaluate results at 100, 200, 500 and finally at 1000. If nothing is specified it will evaluate only at 1000.
 
-Loss function for the training is basically just a binary crossentropy.
+Select datasets to evaluate
+Specify the datasets to evaluate. Ex. If you specify (0,1) only 0th dataset will be evaluated. If you specify (0,4) 0th,1st,2nd, and 3rd datasets will be evaluated. If you need to evaluate the 2nd dataset only specify (2,3)
 
+Define datasets to evaluate
+Specify the datasets indicated by each index. That is the original folder names in the 'data' folder.
 
----
-
-## How to use
-
-### Dependencies
-
-This tutorial depends on the following libraries:
-
-* Tensorflow
-* Keras >= 1.0
-
-Also, this code should be compatible with Python versions 2.7-3.5.
-
-### Run main.py
-
-You will see the predicted results of test image in data/membrane/test
-
-### Or follow notebook trainUnet
-
-
-
-### Results
-
-Use the trained model to do segmentation on test images, the result is statisfactory.
-
-![img/0test.png](img/0test.png)
-
-![img/0label.png](img/0label.png)
-
-
-## About Keras
-
-Keras is a minimalist, highly modular neural networks library, written in Python and capable of running on top of either TensorFlow or Theano. It was developed with a focus on enabling fast experimentation. Being able to go from idea to result with the least possible delay is key to doing good research.
-
-Use Keras if you need a deep learning library that:
-
-allows for easy and fast prototyping (through total modularity, minimalism, and extensibility).
-supports both convolutional networks and recurrent networks, as well as combinations of the two.
-supports arbitrary connectivity schemes (including multi-input and multi-output training).
-runs seamlessly on CPU and GPU.
-Read the documentation [Keras.io](http://keras.io/)
-
-Keras is compatible with: Python 2.7-3.5.
+data.py - No need to change | contains data pre processing
+model.py - No need to change | contains unet models
+image_metrics.py - No need to change | contains evaluation matrics

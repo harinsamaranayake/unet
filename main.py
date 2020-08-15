@@ -18,15 +18,6 @@ epoch_array = [1100]
 target_size = (256,256)
 target_size_channels = (256,256,1)
 
-# target_size = (256,512)
-# target_size_channels = (256,512,1)
-
-# target_size = (512,512)
-# target_size_channels = (512,512,1)
-
-# target_size = (352,640)
-# target_size_channels = (352,640,1)
-
 model,model_name = unet(input_size = target_size_channels)
 
 path_true = None
@@ -83,6 +74,7 @@ class ClacMatrix(tf.keras.callbacks.Callback):
 for epoch in epoch_array:
     print('\nTrain Epochs Count\t:\t',epoch,'\n')
 
+    # Select datasets to evaluate
     for i in range(0,1):
         train_path = None
         test_path = None
@@ -90,6 +82,7 @@ for epoch in epoch_array:
         model_load_path = None
         data_set = None
 
+        # Define datasets to evaluate
         if(i==0):
             data_set = "ONR"
         elif(i==1):
