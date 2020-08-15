@@ -1,23 +1,34 @@
-This repo is originally folked from zhixuhao/unet
+# Water Surface Identification Using UNet/ UNet-RAU in Drone Imagery #
 
-Please go through zhixuhao/unet/README.md for implementation details of UNet
+**This repo is originally folked from zhixuhao/unet**
 
-Setup - Colab Pro
+*Please go through zhixuhao/unet/README.md for implementation details of UNet*
 
-We executed this code on Google Colab Pro. Steps are as follows:
+## Setup ##
 
-1. Upload all code files to Google Drive. Lets assume its "unet-new"
-2. Upload UNetPro.ipynb to Google Colab Pro
-3. Go to top menu and select Runtime > Change runtime type > Hardware accelerator to GPU and save it
-4. Go to top menu and select Run all
+###### Google Colab Pro ######
 
-Adding training and testing data
+Steps:
 
-Here we test 04 datasets ONR, OFR, BOTH, and DRONE.
+1. Clone the folder.
+2. Create a drive folder (Lets assume the its "unet-new").
+3. Upload all files to Google Drive except UNetPro.ipynb
+4. Upload UNetPro.ipynb to Google Colab Pro
+5. In Colab go to top menu and select `Runtime > Change runtime type > Hardware accelerator` to `GPU` and save it
+4. Go to top menu and select `Run all`
+
+Adding Training & Testing Data
+
+Here we test 04 datasets:
+- ONR
+- OFR
+- BOTH
+- DRONE
+
 Each dataset has a training and a testing sub-datasets.
 In each sub-dataset it has image and label folders.
-images - original images
-lable - ground truth images
+- images - original images
+- lable - ground truth images
 
 Images were obtained from Puddle-1000 dataset available at Cow911/SingleImageWaterHazardDetectionWithRAU
 
@@ -62,6 +73,6 @@ Specify the datasets to evaluate. Ex. If you specify (0,1) only 0th dataset will
 Define datasets to evaluate
 Specify the datasets indicated by each index. That is the original folder names in the 'data' folder.
 
-data.py - No need to change | contains data pre processing
-model.py - No need to change | contains unet models
-image_metrics.py - No need to change | contains evaluation matrics
+- data.py - No need to change | contains data pre processing
+- model.py - No need to change | contains unet models
+- image_metrics.py - No need to change | contains evaluation matrics
