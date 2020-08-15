@@ -5,6 +5,13 @@ import os
 import glob
 import skimage.io as io
 import skimage.transform as trans
+import cv2
+
+# https://machinelearningmastery.com/reproducible-results-neural-networks-keras/
+from numpy.random import seed
+seed(123)
+from tensorflow import set_random_seed
+set_random_seed(456)
 
 Sky = [128,128,128]
 Building = [128,0,0]
@@ -21,7 +28,7 @@ Unlabelled = [0,0,0]
 
 COLOR_DICT = np.array([Sky, Building, Pole, Road, Pavement,
                           Tree, SignSymbol, Fence, Car, Pedestrian, Bicyclist, Unlabelled])
-
+test_list = None
 
 def adjustData(img,mask,flag_multi_class,num_class):
     if(flag_multi_class):
@@ -47,7 +54,7 @@ def adjustData(img,mask,flag_multi_class,num_class):
 
 def trainGenerator(batch_size,train_path,image_folder,mask_folder,aug_dict,image_color_mode = "grayscale",
                     mask_color_mode = "grayscale",image_save_prefix  = "image",mask_save_prefix  = "mask",
-                    flag_multi_class = False,num_class = 2,save_to_dir = None,target_size = (256,256),seed = 1):
+                    flag_multi_class = False,num_class = 2,save_to_dir = None,target_size = None,seed = 1):
     '''
     can generate image and mask at the same time
     use the same seed for image_datagen and mask_datagen to ensure the transformation for image and mask is the same
@@ -80,17 +87,75 @@ def trainGenerator(batch_size,train_path,image_folder,mask_folder,aug_dict,image
         img,mask = adjustData(img,mask,flag_multi_class,num_class)
         yield (img,mask)
 
+# def testGenerator(test_path,num_image = 30,target_size = (256,256),flag_multi_class = False,as_gray = True):
+#     for i in range(num_image):
+#         img = io.imread(os.path.join(test_path,"%d.png"%i),as_gray = as_gray)
+#         img = img / 255
+#         img = trans.resize(img,target_size)
+#         img = np.reshape(img,img.shape+(1,)) if (not flag_multi_class) else img
+#         img = np.reshape(img,(1,)+img.shape)
+#         yield img
 
+def validGenerator(test_path,num_image = None,target_size = None,flag_multi_class = False,as_gray = True):
+    global valid_list_color
+    valid_list_color = next(os.walk(test_path + '/image'))[2]
 
-def testGenerator(test_path,num_image = 30,target_size = (256,256),flag_multi_class = False,as_gray = True):
-    for i in range(num_image):
-        img = io.imread(os.path.join(test_path,"%d.png"%i),as_gray = as_gray)
+    if '.DS_Store' in valid_list_color:
+        valid_list_color.remove('.DS_Store')
+
+    img_color_array = []
+    img_gt_array = []
+
+    for i in valid_list_color:
+        img_color = cv2.imread(os.path.join((test_path + '/image'),i),0)
+        img_gt = cv2.imread(os.path.join((test_path + '/label'),i),0)
+
+        img_color = img_color / 255
+        img_gt = img_gt / 255
+
+        img_color = trans.resize(img_color,target_size)
+        img_gt = trans.resize(img_gt,target_size)
+
+        # img_color = np.reshape(img_color,img_color.shape+(1,)) if (not flag_multi_class) else img_color
+        # img_gt = np.reshape(img_gt,img_gt.shape+(1,)) if (not flag_multi_class) else img_gt
+
+        img_color = np.reshape(img_color,img_color.shape + (1,))
+        img_gt = np.reshape(img_gt,img_gt.shape + (1,))
+
+        img_color_array.append(img_color)
+        img_gt_array.append(img_gt)
+
+    img_color_array = np.array(img_color_array)
+    img_gt_array = np.array(img_gt_array)
+
+    # print(img_color_array.shape,img_gt_array.shape)
+        
+    return (img_color_array,img_gt_array)
+
+def testGenerator(test_path,num_image = None,target_size = None,flag_multi_class = False,as_gray = True):
+    global test_list
+    test_list = next(os.walk(test_path))[2]
+
+    if '.DS_Store' in test_list:
+        test_list.remove('.DS_Store')
+
+    for i in test_list:
+        img = cv2.imread(os.path.join(test_path,i),0)
         img = img / 255
         img = trans.resize(img,target_size)
         img = np.reshape(img,img.shape+(1,)) if (not flag_multi_class) else img
         img = np.reshape(img,(1,)+img.shape)
         yield img
 
+def getCount(path=None):
+    print(path)
+    count_list = next(os.walk(path))[2]
+
+    if '.DS_Store' in count_list:
+        count_list.remove('.DS_Store')
+
+    count = len(count_list)
+    return count
 
 def geneTrainNpy(image_path,mask_path,flag_multi_class = False,num_class = 2,image_prefix = "image",mask_prefix = "mask",image_as_gray = True,mask_as_gray = True):
     image_name_arr = glob.glob(os.path.join(image_path,"%s*.png"%image_prefix))
@@ -117,8 +182,24 @@ def labelVisualize(num_class,color_dict,img):
     return img_out / 255
 
 
+# def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
+#     for i,item in enumerate(npyfile):
+#         i = i+301
+#         img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]
+#         io.imsave(os.path.join(save_path,"%d.png"%i),img)
+
 
 def saveResult(save_path,npyfile,flag_multi_class = False,num_class = 2):
+    global test_list
+
     for i,item in enumerate(npyfile):
+        img_name = test_list[i]
         img = labelVisualize(num_class,COLOR_DICT,item) if flag_multi_class else item[:,:,0]
-        io.imsave(os.path.join(save_path,"%d_predict.png"%i),img)
+        io.imsave(os.path.join(save_path,"%s"%img_name),img)
+
+
+# if __name__ == '__main__':
+#     test_path = "data/membrane/test_301_330_ep100"
+#     a=testGenerator(test_path=test_path)
+#     for i in a:
+#         print(i.shape)
