@@ -1,21 +1,19 @@
 # Water Surface Identification Using UNet/ UNet-RAU in Drone Imagery #
 
-**This repo is originally forked from zhixuhao/unet**
+**This repo is originally forked from [zhixuhao/unet](https://github.com/zhixuhao/unet)**
 
-*Please go through zhixuhao/unet/README.md for implementation details of UNet*
+Please go through [zhixuhao/unet/README.md](https://github.com/zhixuhao/unet/README.md) for implementation details of UNet
 
-## Setup ##
+## Setup - Google Colab Pro ##
 
-###### Google Colab Pro ######
-
-**Steps:**
+**Steps**
 
 1. Clone this repository.
 2. Create a Google Drive folder (Lets assume the its `unet-new`).
 3. Upload all files to Google Drive folder `unet-new` except UNetPro.ipynb
 4. Upload UNetPro.ipynb to Google Colab Pro
-5. In Colab go to top menu and select `Runtime > Change runtime type > Hardware accelerator` to `GPU` and save it.
-6. Go to top menu and select `Run all`.
+5. In [Colab](https://colab.research.google.com/) go to `Menu bar` and select `Runtime > Change runtime type > Hardware accelerator` to `GPU` and save it.
+6. Go to `Menu bar` and select `Run all`.
 7. Provide accesss permission to your dive from Colab.
 
 **Adding Training & Testing Data**
@@ -26,15 +24,15 @@ Here we test 04 `datasets`:
  - `BOTH`
  - `DRONE`
 
-Each dataset has two `sub-datasets`:
- - `training` - for training
- - `testing` - for testing
-
-In each sub-dataset it has `image` and `label` folders.
+Each `dataset` has two `sub-datasets`:
+ - `train` - used to train the model
+ - `test` - used to test the model
+ 
+In each `sub-dataset` it has `image` and `label` folders.
  - `images` - original images
  - `lable` - ground truth images
 
-Images were obtained from `Puddle-1000` dataset available at `Cow911/SingleImageWaterHazardDetectionWithRAU`.
+Images were obtained from `Puddle-1000` dataset available [here](Cow911/SingleImageWaterHazardDetectionWithRAU).
 
 **Updating main.py**
 
