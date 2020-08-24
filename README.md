@@ -2,7 +2,7 @@
 
 **This repo is originally forked from [zhixuhao/unet](https://github.com/zhixuhao/unet)**
 
-Please go through their ReadMe.md from [here](https://github.com/zhixuhao/unet/README.md) for implementation details of UNet
+Please go through their ReadMe.md from [here](https://github.com/zhixuhao/unet/blob/master/README.md) for implementation details of UNet
 
 FCN-RAU Water Surface Identification is available [here](https://github.com/Cow911/SingleImageWaterHazardDetectionWithRAU)
 
