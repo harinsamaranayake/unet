@@ -1,67 +1,89 @@
-This repo is originally folked from zhixuhao/unet
+# Water Surface Identification Using UNet/ UNet-RAU in Drone Imagery #
 
-Please go through zhixuhao/unet/README.md for implementation details of UNet
+**This repo is originally forked from [zhixuhao/unet](https://github.com/zhixuhao/unet)**
 
-Setup - Colab Pro
+Please go through their ReadMe.md from [here](https://github.com/zhixuhao/unet/blob/master/README.md) for implementation details of UNet
 
-We executed this code on Google Colab Pro. Steps are as follows:
+FCN-RAU Water Surface Identification is available [here](https://github.com/Cow911/SingleImageWaterHazardDetectionWithRAU)
 
-1. Upload all code files to Google Drive. Lets assume its "unet-new"
-2. Upload UNetPro.ipynb to Google Colab Pro
-3. Go to top menu and select Runtime > Change runtime type > Hardware accelerator to GPU and save it
-4. Go to top menu and select Run all
+Puddle-1000 dataset is available [here](https://cloudstor.aarnet.edu.au/plus/s/oSeR8zogqzaXN6X)
 
-Adding training and testing data
+## Setup - Google Colab Pro ##
 
-Here we test 04 datasets ONR, OFR, BOTH, and DRONE.
-Each dataset has a training and a testing sub-datasets.
-In each sub-dataset it has image and label folders.
-images - original images
-lable - ground truth images
+**Steps**
 
-Images were obtained from Puddle-1000 dataset available at Cow911/SingleImageWaterHazardDetectionWithRAU
+1. Clone this repository.
+2. Create a Google Drive folder (Lets assume the its `unet-new`).
+3. Upload all files to Google Drive folder `unet-new` except UNetPro.ipynb
+4. Upload UNetPro.ipynb to Google Colab Pro
+5. In [Colab](https://colab.research.google.com/) go to `Menu bar` and select `Runtime > Change runtime type > Hardware accelerator` to `GPU` and save it.
+6. Go to `Menu bar` and select `Run all`.
+7. Provide accesss permission to your dive from Colab.
 
-updating main.py
+**Adding Training & Testing Data**
 
-base_path - Path of the data folder.
-base_path = "/content/gdrive/My Drive/unet-new"
+Here we test 04 `datasets`:
+ - `ONR`
+ - `OFR`
+ - `BOTH`
+ - `DRONE`
 
-batch_size - Bach size
+Each `dataset` has two `sub-datasets`:
+ - `train` - used to train the model
+ - `test` - used to test the model
+ 
+In each `sub-dataset` it has `image` and `label` folders.
+ - `images` - original images
+ - `lable` - ground truth images
 
-trainCount - Training image size. It is set to total number of training images by default.
+Images were obtained from `Puddle-1000` dataset available [here](https://cloudstor.aarnet.edu.au/plus/s/oSeR8zogqzaXN6X).
+
+**Updating main.py**
+
+`base_path` - Path of the data folder *Ex. base_path = "/content/gdrive/My Drive/unet-new"*
+
+`batch_size` - Bach size
+
+`trainCount` - Training image count. By default it is set to total number of training images.
 
 EPOCHS
-ecpoch_array - set of epoch to continue the training
-ecpoch_array = [1000,20000]
 
+`ecpoch_array` - set of epoch to continue the training
+
+*Ex. `ecpoch_array = [1000,20000]`*
 - Train for 1000 epochs and evaluate.
-- Then trian for 20000 epochs from begining and evaluate.
+- Then, trian for 20000 epochs from begining and evaluate.
 
 RESIZING
-target_size - input image size to unet
-target_size_channels - input image size with channels to unet
+
+`target_size` - input image size to unet
+`target_size_channels` - input image size with channels to unet
 
 MODEL
-model,model_name - select the model
-currently it has the following models
 
-- unet | unet without any modifications
-- unet-1-rau
-- unet-2-rau
-- unet-3-rau
-- unet-4-rau
-- unet-8-rau
+`model,model_name` - select the model and model name
+
+Currently following models have been implemented:
+- `unet` - unet without any modifications
+- `unet-1-rau`
+- `unet-2-rau`
+- `unet-3-rau`
+- `unet-4-rau`
+- `unet-8-rau`
 
 CallBack Class
+
 It is used to evaluate the results while training.
-Ex: If you specify 100, 200, 500 in the if statement and your original epochs count is 1000, it will evaluate results at 100, 200, 500 and finally at 1000. If nothing is specified it will evaluate only at 1000.
+Ex: If you specify `if((epoch == 100) or (epoch == 200) or (epoch == 500)):` in the if statement and your original epochs count is 1000, it will evaluate results at 100, 200, 500 and finally at 1000. If nothing is specified it will evaluate only at 1000.
 
 Select datasets to evaluate
-Specify the datasets to evaluate. Ex. If you specify (0,1) only 0th dataset will be evaluated. If you specify (0,4) 0th,1st,2nd, and 3rd datasets will be evaluated. If you need to evaluate the 2nd dataset only specify (2,3)
+
+Specify the datasets to evaluate. Ex. If you specify `if(0,1)` only 0th dataset will be evaluated. If you specify `if(0,4)` 0th,1st,2nd, and 3rd datasets will be evaluated. If you need to evaluate the 2nd dataset only specify `if(2,3)`.
 
 Define datasets to evaluate
-Specify the datasets indicated by each index. That is the original folder names in the 'data' folder.
 
-data.py - No need to change | contains data pre processing
-model.py - No need to change | contains unet models
-image_metrics.py - No need to change | contains evaluation matrics
+Specify the datasets indicated by each index. That is the original folder names in the `data` folder which specify datasets.
+
+- `data.py` - No need to change | contains data pre processing
+- `model.py` - No need to change | contains unet models
+- `image_metrics.py` - No need to change | contains evaluation matrics
